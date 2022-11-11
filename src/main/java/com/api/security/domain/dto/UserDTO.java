@@ -9,15 +9,18 @@ public class UserDTO {
     private String rol;
     private String permission;
 
+    private Boolean enabled;
+
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String username, String email, String rol, String permission) {
+    public UserDTO(Long id, String username, String email, String rol, String permission, Boolean enabled) {
         this.id = id;
         this.username = username;
         this.email = email;
- ;      this.rol = rol;
+        this.rol = rol;
         this.permission = permission;
+        this.enabled = enabled;
     }
 
     public Long getId() {
@@ -44,7 +47,6 @@ public class UserDTO {
         this.email = email;
     }
 
-
     public String getRol() {
         return rol;
     }
@@ -61,16 +63,21 @@ public class UserDTO {
         this.permission = permission;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     // toString
 
     @Override
     public String toString() {
-        return "UserDTO{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", rol='" + rol + '\'' +
-                ", permission='" + permission + '\'' +
-                '}';
+        return "UserDTO{" + "id=" + id + ", " +
+                "username=" + username + ", email=" + email + ", " +
+                "rol=" + rol + ", permission=" + permission + ", " +
+                "enabled=" + enabled + '}';
     }
 }

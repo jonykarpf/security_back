@@ -3,9 +3,8 @@ package com.api.security.percistance.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users_roles")
-public class UserRol {
-    
+@Table(name = "usuarios_roles")
+public class UsuarioRol {
     // attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +12,7 @@ public class UserRol {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario")
-    private User usuario;
+    private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rol_id")
@@ -21,17 +20,16 @@ public class UserRol {
 
     // constructors
 
-    public UserRol() {
+    public UsuarioRol() {
     }
 
-    public UserRol(Long usuarioRolId, User usuario, Rol rol) {
+    public UsuarioRol(Long usuarioRolId, Usuario usuario, Rol rol) {
         this.usuarioRolId = usuarioRolId;
         this.usuario = usuario;
         this.rol = rol;
     }
 
     // getters and setters
-
 
     public Long getUsuarioRolId() {
         return usuarioRolId;
@@ -41,11 +39,11 @@ public class UserRol {
         this.usuarioRolId = usuarioRolId;
     }
 
-    public User getUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(User usuario) {
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 

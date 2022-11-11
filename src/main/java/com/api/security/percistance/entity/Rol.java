@@ -5,59 +5,48 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "roles")
 public class Rol {
-
-    // Attributes
+    // attributes
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
-    @Column(name = "id_rol")
-    private Long id;
-
-
-    private String name;
-
-
-    private String description;
-
+    private Long rolId;
+    private String nombre;
 
     @OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
-    private Set<UserRol> userRoles = new HashSet<>();
+    private Set<UsuarioRol> usuarioRoles = new HashSet<>();
 
     // constructors
-
     public Rol() {
     }
 
-    public Rol(Long id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+    public Rol(Long rolId, String nombre) {
+        this.rolId = rolId;
+        this.nombre = nombre;
     }
 
     // getters and setters
 
-    public Long getId() {
-        return id;
+    public Long getRolId() {
+        return rolId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRolId(Long rolId) {
+        this.rolId = rolId;
     }
 
-    public String getName() {
-        return name;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getDescription() {
-        return description;
+    public Set<UsuarioRol> getUsuarioRoles() {
+        return usuarioRoles;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUsuarioRoles(Set<UsuarioRol> usuarioRoles) {
+        this.usuarioRoles = usuarioRoles;
     }
 }
