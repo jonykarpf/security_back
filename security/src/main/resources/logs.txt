@@ -1,0 +1,17 @@
+INFO    2022-11-11 17:51:29,056 [main] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 17:53:03,805 [restartedMain] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 18:03:58,404 [restartedMain] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 18:04:07,843 [restartedMain] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 18:04:40,452 [restartedMain] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 18:04:49,106 [restartedMain] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 18:18:38,465 [http-nio-8080-exec-6] com.api.security.domain.service.impl.UsuarioServiceImpl  - OBTENIENDO USUARIO METODO - getUsuario
+INFO    2022-11-11 18:18:42,239 [http-nio-8080-exec-6] com.api.security.domain.service.impl.UsuarioServiceImpl  - USUARIO ENCONTRADO
+INFO    2022-11-11 18:21:16,359 [http-nio-8080-exec-9] com.api.security.domain.service.impl.UsuarioServiceImpl  - GUARDANDO USUARIO METODO - saveUsuario
+INFO    2022-11-11 18:21:32,487 [http-nio-8080-exec-10] com.api.security.domain.service.impl.UsuarioServiceImpl  - OBTENIENDO USUARIO METODO - getUsuario
+INFO    2022-11-11 18:21:33,016 [http-nio-8080-exec-10] com.api.security.domain.service.impl.UsuarioServiceImpl  - USUARIO ENCONTRADO
+INFO    2022-11-11 18:22:56,503 [http-nio-8080-exec-4] com.api.security.domain.service.impl.UsuarioServiceImpl  - OBTENIENDO TODOS LOS USUARIOS METODO - getAllUsuarios
+INFO    2022-11-11 18:22:57,175 [http-nio-8080-exec-4] com.api.security.domain.service.impl.UsuarioServiceImpl  - USUARIOS OBTENIDOS CORRECTAMENTE
+INFO    2022-11-11 18:23:24,030 [http-nio-8080-exec-6] com.api.security.domain.service.impl.UsuarioServiceImpl  - ELIMINANDO USUARIO METODO - deleteUsuario en <<UsuarioServiceImpl>>
+INFO    2022-11-11 18:23:24,964 [http-nio-8080-exec-6] com.api.security.domain.service.impl.UsuarioServiceImpl  - USUARIO ELIMINADO CORRECTAMENTE
+INFO    2022-11-11 18:23:38,579 [http-nio-8080-exec-7] com.api.security.domain.service.impl.UsuarioServiceImpl  - OBTENIENDO TODOS LOS USUARIOS METODO - getAllUsuarios
+INFO    2022-11-11 18:23:39,100 [http-nio-8080-exec-7] com.api.security.domain.service.impl.UsuarioServiceImpl  - USUARIOS OBTENIDOS CORRECTAMENTE

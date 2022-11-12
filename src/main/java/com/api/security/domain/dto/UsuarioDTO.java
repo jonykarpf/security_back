@@ -1,6 +1,6 @@
 package com.api.security.domain.dto;
 
-public class UserDTO {
+public class UsuarioDTO {
 
     //Patron DATA TRANSFER OBJECT
     private Long id;
@@ -11,10 +11,10 @@ public class UserDTO {
 
     private Boolean enabled;
 
-    public UserDTO() {
+    public UsuarioDTO() {
     }
 
-    public UserDTO(Long id, String username, String email, String rol, String permission, Boolean enabled) {
+    public UsuarioDTO(Long id, String username, String email, String rol, String permission, Boolean enabled) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -75,7 +75,7 @@ public class UserDTO {
 
     @Override
     public String toString() {
-        return "UserDTO{" + "id=" + id + ", " +
+        return "UsuarioDTO{" + "id=" + id + ", " +
                 "username=" + username + ", email=" + email + ", " +
                 "rol=" + rol + ", permission=" + permission + ", " +
                 "enabled=" + enabled + '}';
