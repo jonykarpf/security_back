@@ -3,19 +3,21 @@ package com.api.security.web.config.security;
 public class JwtRequest {
 
     private String username;
+
+
     private String password;
 
     // constructors
     public JwtRequest() {
     }
 
-    public JwtRequest(String username, String password) {
+    public JwtRequest(String username,  String password) {
         this.username = username;
         this.password = password;
     }
 
-
     // getters and setters
+
     public String getUsername() {
         return username;
     }

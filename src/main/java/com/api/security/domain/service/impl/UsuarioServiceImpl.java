@@ -26,7 +26,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     // Inyeccion de dependencia de usuario repository
     private UsuarioRepository usuarioRepository;
 
-    // mapeador de objetos se usa para convertir un objeto a otro tipo de objeto debido a que usamos el patron DTO
+    /* mapeador de objetos se usa para convertir un objeto a otro tipo de objeto debido a que usamos el patron DTO
+    para no exponer la contraseña del usuario en la respuesta del servicio */
     private ObjectMapper mapper;
 
     @Autowired
@@ -92,16 +93,15 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Optional<UsuarioDTO> deleteUsuario(Long usuarioId) {
+    public Optional<UsuarioDTO> deleteUsuario(Long usuarioId) throws ResourceNotFoundException {
         LOGGER.info("ELIMINANDO USUARIO METODO - deleteUsuario en <<UsuarioServiceImpl>>");
         UsuarioDTO deleteUsuarioDTO = new UsuarioDTO();
         Optional<Usuario> usuario = usuarioRepository.findById(usuarioId);
-        if (usuario.isPresent()) {
-            usuarioRepository.delete(usuario.get());
-            deleteUsuarioDTO = mapper.convertValue(usuario.get(), UsuarioDTO.class);
-        }
-        LOGGER.info("USUARIO ELIMINADO CORRECTAMENTE");
-        return Optional.ofNullable(deleteUsuarioDTO);
+        usuario.map(usuario1 -> {
+            usuarioRepository.delete(usuario1);
+            return deleteUsuarioDTO;
+        }).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+        return Optional.of(deleteUsuarioDTO);
     }
 
     @Override
@@ -116,6 +116,22 @@ public class UsuarioServiceImpl implements UsuarioService {
         LOGGER.info("USUARIOS OBTENIDOS CORRECTAMENTE");
         return getAllUsuariosDTO;
     }
+
+    @Override
+    public UsuarioDTO updateUsuario(Usuario usuario) throws ResourceNotFoundException {
+        LOGGER.info("ACTUALIZANDO USUARIO METODO - updateUsuario");
+        UsuarioDTO updateUsuarioDTO = new UsuarioDTO();
+        Optional<Usuario> usuarioLocal = usuarioRepository.findById(usuario.getId());
+        if (usuarioLocal.isPresent()) {
+            updateUsuarioDTO = mapper.convertValue(usuarioRepository.save(usuario), UsuarioDTO.class);
+        } else {
+            LOGGER.error("USUARIO NO ENCONTRADO");
+            throw new ResourceNotFoundException("Usuario no encontrado");
+        }
+        LOGGER.info("USUARIO ACTUALIZADO CORRECTAMENTE");
+        return updateUsuarioDTO;
+    }
+
 
     //----------------------END. IMPLEMENTED METHODS---------------------------
 
@@ -133,7 +149,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 
         Rol rol = new Rol();
-        rol.setRolId(1L);
+        rol.setIdRol(1L);
         rol.setNombre("ADMIN");
 
         Set<UsuarioRol> usuarioRoles = new HashSet<>();

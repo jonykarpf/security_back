@@ -12,16 +12,20 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
+@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
     // Inyeccion de dependencia de la clase AuthenticationManager
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationManager  authenticationManager;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -29,8 +33,9 @@ public class AuthenticationController {
     @Autowired
     private JwtUtil jwtTokenUtil;
 
+
     @PostMapping("/authenticate")
-    public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) throws Exception {
+    public ResponseEntity<?> generateToken(@RequestBody JwtRequest jwtRequest) {
         try {
             authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
         } catch (Exception e) {
@@ -50,5 +55,9 @@ public class AuthenticationController {
             throw new Exception("CREDENCIALES INVALIDAS " + e.getMessage());
 
         }
-    }
+
+
+
 }
+
+    }

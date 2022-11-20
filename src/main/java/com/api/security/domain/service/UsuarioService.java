@@ -18,11 +18,13 @@ public interface UsuarioService {
     public UsuarioDTO getUsuario(String username) throws ResourceNotFoundException;
 
     // eliminar usuario por id
-    public Optional<UsuarioDTO> deleteUsuario(Long usuarioId);
+    public Optional<UsuarioDTO> deleteUsuario(Long usuarioId) throws ResourceNotFoundException;
 
     // obtener todos los usuarios
     List<UsuarioDTO> getAllUsuarios();
 
+    // actualizar usuario
+    public UsuarioDTO updateUsuario(Usuario usuario) throws ResourceNotFoundException;
 
     // insertar usuarios al iniciar la aplicacion
     public void insertarUsuarios();

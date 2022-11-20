@@ -13,12 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(origins = "*")
 public class UsuarioController {
 
 
@@ -38,13 +40,12 @@ public class UsuarioController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveUsuario(@RequestBody Usuario usuario) throws ResourceNotFoundException {
-        ResponseEntity response = new ResponseEntity<>("AUTOINCREMENT ID", HttpStatus.BAD_REQUEST);
         // encriptar la contraseña
         usuario.setPassword(bCryptPasswordEncoder.encode(usuario.getPassword()));
+        // asignarle un rol por defecto
         Set<UsuarioRol> usuarioRoles = new HashSet<>();
         UsuarioDTO usuarioDTOResponse = new UsuarioDTO();
         Rol rol = new Rol();
-        rol.setRolId(1L);
         rol.setNombre("USER");
         UsuarioRol usuarioRol = new UsuarioRol();
         usuarioRol.setRol(rol);
@@ -52,13 +53,15 @@ public class UsuarioController {
         usuarioRoles.add(usuarioRol);
         usuarioDTOResponse = usuarioService.saveUsuario(usuario, usuarioRoles);
 
-        if (usuarioDTOResponse != null) {
-            response = new ResponseEntity<>("USUARIO CREADO CON EXITO", HttpStatus.CREATED);
+        // si el usuario ya existe en la base de datos se lanza una excepcion
+        if (usuarioDTOResponse == null) {
+            return new ResponseEntity<>("El usuario ya existe", HttpStatus.BAD_REQUEST);
         }
-        return response;
-
-
+        // si el usuario no existe en la base de datos se guarda en la base de datos
+        return new ResponseEntity<>(usuarioRoles, HttpStatus.OK);
     }
+
+
 
 
     @GetMapping("/read/{username}")
@@ -66,9 +69,11 @@ public class UsuarioController {
         ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         UsuarioDTO usuarioDTOResponse = usuarioService.getUsuario(username);
 
+        // si el usuario existe en la base de datos se retorna
         if (usuarioDTOResponse.getId() != null) {
             response = new ResponseEntity<>(usuarioDTOResponse, HttpStatus.OK);
         }
+        // si el usuario no existe en la base de datos se lanza una excepcion
         else {
             response = new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
@@ -81,20 +86,47 @@ public class UsuarioController {
         ResponseEntity response = new ResponseEntity<>("USUARIO NO EXISTE",HttpStatus.NOT_FOUND);
         Optional<UsuarioDTO> usuarioDTOResponse = usuarioService.deleteUsuario(usuarioId);
 
+        // si el usuario existe en la base de datos se elimina
         if (usuarioDTOResponse.isPresent()) {
-            response = new ResponseEntity<>(usuarioDTOResponse, HttpStatus.OK);
+            response = new ResponseEntity<>(usuarioDTOResponse.get(), HttpStatus.OK);
+        }
+        else {
+            response = new ResponseEntity<>("USUARIO NO EXISTE",HttpStatus.NOT_FOUND);
         }
         return response;
     }
 
 
     @GetMapping("/readAll")
-    public ResponseEntity<?> readAllUsuarios() {
-        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        Stream<UsuarioDTO> usuarioDTOResponse = usuarioService.getAllUsuarios().stream();
+    public ResponseEntity<?> readAllUsuarios() throws ResourceNotFoundException {
+        AtomicReference<ResponseEntity> response = new AtomicReference<>(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        List<UsuarioDTO> usuarios = usuarioService.getAllUsuarios();
 
-        if (usuarioDTOResponse != null) {
-            response = new ResponseEntity<>(usuarioDTOResponse, HttpStatus.OK);
+        // si hay usuarios en la base de datos se retornan
+        usuarios.forEach(usuario -> {
+            if (usuario.getId() != null) {
+                response.set(new ResponseEntity<>(usuarios, HttpStatus.OK));
+            }
+
+        });
+
+        return response.get();
+
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUsuario(@RequestBody Usuario usuario) throws ResourceNotFoundException {
+       // encriptar la contraseña
+        usuario.setPassword(bCryptPasswordEncoder.encode(usuario.getPassword()));
+        UsuarioDTO usuarioDTOResponse = usuarioService.updateUsuario(usuario);
+        ResponseEntity response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // si el usuario existe en la base de datos se actualiza
+        if (usuarioDTOResponse.getId() != null){
+            response = new ResponseEntity<>(usuario, HttpStatus.OK);
+        }
+        // si el usuario no existe en la base de datos se lanza una excepcion
+        else {
+            response = new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
         return response;
 

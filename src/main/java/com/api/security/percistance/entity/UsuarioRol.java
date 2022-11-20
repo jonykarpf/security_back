@@ -8,14 +8,14 @@ public class UsuarioRol {
     // attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long usuarioRolId;
+    private Long idUsuarioRol;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "rol_id")
+    @JoinColumn(name = "id_rol")
     private Rol rol;
 
     // constructors
@@ -23,20 +23,21 @@ public class UsuarioRol {
     public UsuarioRol() {
     }
 
-    public UsuarioRol(Long usuarioRolId, Usuario usuario, Rol rol) {
-        this.usuarioRolId = usuarioRolId;
+    public UsuarioRol(Long idUsuarioRol, Usuario usuario, Rol rol) {
+        this.idUsuarioRol = idUsuarioRol;
         this.usuario = usuario;
         this.rol = rol;
     }
 
     // getters and setters
 
-    public Long getUsuarioRolId() {
-        return usuarioRolId;
+
+    public Long getIdUsuarioRol() {
+        return idUsuarioRol;
     }
 
-    public void setUsuarioRolId(Long usuarioRolId) {
-        this.usuarioRolId = usuarioRolId;
+    public void setIdUsuarioRol(Long idUsuarioRol) {
+        this.idUsuarioRol = idUsuarioRol;
     }
 
     public Usuario getUsuario() {

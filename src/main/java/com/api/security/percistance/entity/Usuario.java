@@ -20,6 +20,7 @@ public class Usuario implements UserDetails {
     @Column(name = "id_usuario")
     private Long id;
 
+    @Column(name = "username", unique = true , length = 6, nullable = false)
     private String username;
     private String password;
     @Column(name = "correo_electronico", unique = true, nullable = false)
@@ -123,6 +124,8 @@ public class Usuario implements UserDetails {
         this.username = username;
     }
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
@@ -131,6 +134,8 @@ public class Usuario implements UserDetails {
         });
         return authorities;
     }
+
+
 
 }
 

@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
+
         // validar que el token no sea nulo y que empiece con la palabra Bearer
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
@@ -69,3 +70,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
 }
+
