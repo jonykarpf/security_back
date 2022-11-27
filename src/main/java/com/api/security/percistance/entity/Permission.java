@@ -1,5 +1,7 @@
 package com.api.security.percistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -10,33 +12,22 @@ public class Permission implements Serializable {
 
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY )
-    private Long idPermission;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idPermission;
+    @Column(name="url", nullable = false, unique = true)
     private String url;
-    private String metodo;
+    @Column(name="method", nullable = false, length = 10)
+    private String method;
 
     @ManyToMany(mappedBy = "permissions")
-    // crear tabla intermedia muchos a muchos con rol
+    @JsonIgnoreProperties("permissions")
     private Set<Rol> roles;
 
-    // constructors
-
-    public Permission() {
-    }
-
-    public Permission(Long idPermission, String url, String metodo) {
-        this.idPermission = idPermission;
-        this.url = url;
-        this.metodo = metodo;
-    }
-
-    // getters and setters
-
-    public Long getIdPermission() {
+    public Integer getIdPermission() {
         return idPermission;
     }
 
-    public void setIdPermission(Long idPermission) {
+    public void setIdPermission(Integer idPermission) {
         this.idPermission = idPermission;
     }
 
@@ -48,12 +39,20 @@ public class Permission implements Serializable {
         this.url = url;
     }
 
-    public String getMetodo() {
-        return metodo;
+    public String getMethod() {
+        return method;
     }
 
-    public void setMetodo(String metodo) {
-        this.metodo = metodo;
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
     }
 }
 

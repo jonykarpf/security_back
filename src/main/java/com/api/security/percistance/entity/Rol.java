@@ -1,43 +1,49 @@
 package com.api.security.percistance.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "rol")
 public class Rol {
     // attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRol;
-    private String nombre;
+    @Column(name="name", nullable = false, unique = true)
+    private String name;
+    private String description = "";
 
-    @OneToMany(mappedBy = "rol", fetch = FetchType.EAGER)
-    private Set<UsuarioRol> usuarioRoles = new HashSet<>();
-
+    @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "rol")
+    @JsonIgnoreProperties("rol")
+    private List<Usuario> users;
 
     @ManyToMany
     @JoinTable(
-            name = "role_permission",
-            joinColumns = @JoinColumn(name = "id_rol"),
-            inverseJoinColumns = @JoinColumn(name = "id_permission")
+            name = "permissions_rol",
+            joinColumns = @JoinColumn(name = "idRol"),
+            inverseJoinColumns = @JoinColumn(name = "idPermission")
     )
-    private Set<Permission> permissions = new HashSet<>();
+    @JsonIgnoreProperties("roles")
+    private Set<Permission> permissions;
 
     // constructors
-    public Rol() {
-    }
 
-    public Rol(Long idRol, String nombre, Set<UsuarioRol> usuarioRoles, Set<Permission> permissions) {
+
+    public Rol(Long idRol, String name, String description, List<Usuario> users, Set<Permission> permissions) {
         this.idRol = idRol;
-        this.nombre = nombre;
-        this.usuarioRoles = usuarioRoles;
+        this.name = name;
+        this.description = description;
+        this.users = users;
         this.permissions = permissions;
     }
 
-    // getters and setters
+    public Rol() {
 
+    }
 
     public Long getIdRol() {
         return idRol;
@@ -47,20 +53,28 @@ public class Rol {
         this.idRol = idRol;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Set<UsuarioRol> getUsuarioRoles() {
-        return usuarioRoles;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUsuarioRoles(Set<UsuarioRol> usuarioRoles) {
-        this.usuarioRoles = usuarioRoles;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Usuario> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<Usuario> users) {
+        this.users = users;
     }
 
     public Set<Permission> getPermissions() {

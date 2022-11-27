@@ -1,19 +1,21 @@
-package com.api.security.domain.service.impl;
+package com.api.security.domain.service;
 
-import com.api.security.domain.service.PermissionService;
-import com.api.security.exception.ResourceNotFoundException;
+
 import com.api.security.percistance.entity.Permission;
 import com.api.security.percistance.repository.PermissionRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PermissionServiceImpl implements PermissionService {
+public class PermissionServiceImpl  {
 
     // Loggers
     final static Logger LOGGER = Logger.getLogger(PermissionServiceImpl.class);
@@ -25,83 +27,98 @@ public class PermissionServiceImpl implements PermissionService {
 
     //----------------------BEGIN. IMPLEMENTED METHODS---------------------------
 
-    @Override
-    public Permission savePermission(Permission permission) throws ResourceNotFoundException {
-        LOGGER.info("GUARDANDO PERMISO METODO - savePermission");
-        Permission savePermission = permissionRepository.save(permission);
-        if (savePermission.getUrl() != null && savePermission.getMetodo() != null) {
-            LOGGER.info("PERMISO GUARDADO CON EXITO");
-            return savePermission;
-        } else {
-            LOGGER.info("PERMISO NO GUARDADO");
-            throw new ResourceNotFoundException("Permiso no guardado");
+
+    public List<Permission> index(){
+        LOGGER.info("OBTENIENDO TODOS LOS PERMISOS - METODO: PermissionServiceImpl.index()");
+        return (List<Permission>)this.permissionRepository.findAll();
+    }
+
+    public Optional<Permission> showId(int id){
+        LOGGER.info("OBTENIENDO PERMISO POR ID - METODO: PermissionServiceImpl.showId()");
+        Optional<Permission> result = this.permissionRepository.findById(id);
+        if(result.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Permiso no encontrado");
+        return result;
+    }
+
+    public ResponseEntity<Permission> create(Permission newPermission){
+        LOGGER.info("CREANDO PERMISO - METODO: PermissionServiceImpl.create()");
+        if(newPermission.getIdPermission() != null) {
+            Optional<Permission> result = this.permissionRepository.findById(newPermission.getIdPermission());
+            if (result.isPresent())
+                LOGGER.info("EL PERMISO YA EXISTE EN LA BASE DE DATOS");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "El permiso ya existe");
         }
-    }
 
 
-    @Override
-    public List<Permission> getAllPermissions() throws ResourceNotFoundException {
-        LOGGER.info("OBTENIENDO TODOS LOS PERMISOS - getAllPermissions");
-        List<Permission> permissionList = new ArrayList<>();
-        List<Permission> permissionListLocal = permissionRepository.findAll();
+        if(newPermission.getUrl() != null && newPermission.getMethod() != null) {
 
-        if (permissionListLocal != null) {
-            permissionList = permissionListLocal;
-        } else {
-            LOGGER.info("NO HAY PERMISOS EN LA BASE DE DATOS");
-            throw new ResourceNotFoundException("No hay permisos en la base de datos");
+            Optional<Permission> tempPermission = this.permissionRepository.findByUrl(newPermission.getUrl());
+            if(tempPermission.isPresent())
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "URL ya existe");
+            return new ResponseEntity<>(this.permissionRepository.save(newPermission), HttpStatus.CREATED);
         }
-        return permissionList;
+        else
+            LOGGER.error("ERROR AL CREAR EL PERMISO - METODO: PermissionServiceImpl.create()");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "URL y método son obligatorios");
     }
 
-    @Override
-    public Optional<Permission> getPermissionById(Long idPermission) throws ResourceNotFoundException {
-        LOGGER.info("OBTENIENDO PERMISO POR ID - getPermissionById");
-        Optional<Permission> permission = permissionRepository.findById(idPermission);
-        if (!permission.isPresent()) {
-            LOGGER.error("PERMISO NO ENCONTRADO");
-            throw new ResourceNotFoundException("Permiso no encontrado");
-        } else {
-            LOGGER.info("PERMISO ENCONTRADO");
-            return permission;
+    public ResponseEntity<Permission> update(int id, Permission updatedPermission){
+        LOGGER.info("ACTUALIZANDO PERMISO - METODO: PermissionServiceImpl.update()");
+        if(id > 0){
+            Optional<Permission> tempPermission = this.showId(id);
+
+            if(tempPermission.isPresent()){
+                if(updatedPermission.getMethod() != null)
+                    tempPermission.get().setMethod(updatedPermission.getMethod());
+                if(updatedPermission.getUrl() != null)
+                    tempPermission.get().setUrl(updatedPermission.getUrl());
+                try {
+                      LOGGER.info("PERMISO ACTUALIZADO CORRECTAMENTE - METODO: PermissionServiceImpl.update()");
+                    return new ResponseEntity<>(this.permissionRepository.save(tempPermission.get()), HttpStatus.CREATED);
+                }
+                catch(Exception ex){
+                    LOGGER.error("ERROR AL ACTUALIZAR EL PERMISO CONFLICTO - METODO: PermissionServiceImpl.update()");
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,
+                            "Conflicto  en la base de datos");
+                }
+            }
+            else
+                LOGGER.error("ERROR AL ACTUALIZAR EL PERMISO NO ENCONTRADO - METODO: PermissionServiceImpl.update()");
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Permiso no encontrado en la base de datos");
         }
+        else
+            LOGGER.error("ERROR AL ACTUALIZAR EL PERMISO  ID INVALIDO - METODO: PermissionServiceImpl.update()");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Id inválido");
     }
 
-    @Override
-    public Permission updatePermission(Permission permission) throws ResourceNotFoundException {
-        LOGGER.info("ACTUALIZANDO PERMISO - updatePermission");
-        Optional<Permission> permissionOptional = permissionRepository.findById(permission.getIdPermission());
-        if (permissionOptional.isPresent()) {
-            LOGGER.info("PERMISO ENCONTRADO");
-            Permission updatePermission = permissionRepository.save(permission);
-        } else {
-            LOGGER.error("PERMISO NO ENCONTRADO");
-            throw new ResourceNotFoundException("Permiso no encontrado");
-        }
-        return permission;
+    public ResponseEntity<Boolean> delete(int id){
+        LOGGER.info("ELIMINANDO PERMISO - METODO: PermissionServiceImpl.delete()");
+        Boolean success = this.showId(id).map(permission -> {
+            this.permissionRepository.delete(permission);
+            return true;
+        }).orElse(false);
+        if(success)
+            return new ResponseEntity<>(true, HttpStatus.NO_CONTENT);
+        else
+            LOGGER.error("ERROR AL ELIMINAR EL PERMISO - METODO: PermissionServiceImpl.delete()");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error interno del servidor al eliminar el permiso");
     }
 
-    @Override
-    public Optional<Permission> deletePermissionById(Long idPermission) throws ResourceNotFoundException {
-       LOGGER.info("ELIMINANDO PERMISO - deletePermissionById");
-       Optional<Permission> permission = permissionRepository.findById(idPermission);
-       permission.map(permission1 -> {
-           permissionRepository.delete(permission1);
-           return permission1;
-       }).orElseThrow(() -> new ResourceNotFoundException("Permiso no encontrado"));
 
-         return permission;
-    }
+
 
 
     //----------------------END. IMPLEMENTED METHODS---------------------------
 
 
-    // insertar permisos al iniciar la aplicacion
-    @Override
-    public void insertarPermisos() {
 
-
-    }
 }
 
