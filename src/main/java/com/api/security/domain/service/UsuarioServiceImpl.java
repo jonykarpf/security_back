@@ -1,7 +1,9 @@
 package com.api.security.domain.service;
 
+import com.api.security.percistance.entity.Rol;
 import com.api.security.percistance.entity.Usuario;
 import com.api.security.percistance.repository.UsuarioRepository;
+import com.api.security.web.config.InsercionesBD;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ public class UsuarioServiceImpl {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private RolServiceImpl rolService;
+
 
 
 
@@ -39,7 +44,7 @@ public class UsuarioServiceImpl {
     }
 
 
-    public Optional<Usuario> findUsuarioById(int id) {
+    public Optional<Usuario> findUsuarioById(Integer id) {
         LOGGER.info("OBTENIENDO USUARIO POR ID - METODO: UsuarioServiceImpl.findUsuarioById()");
         Optional<Usuario> usuario = usuarioRepository.findById(Math.toIntExact(id));
         if (usuario.isPresent()) {
@@ -84,7 +89,7 @@ public class UsuarioServiceImpl {
         }
 
         if((usuario.getEmail() != null) && (usuario.getNickname() != null) &&
-                (usuario.getPassword() != null) && (usuario.getRol() != null)
+                (usuario.getPassword() != null)
         ){
 
             Optional<Usuario> tempUser = this.usuarioRepository.findByEmail(usuario.getEmail());
@@ -107,7 +112,7 @@ public class UsuarioServiceImpl {
     }
 
 
-    public ResponseEntity<Usuario> update(int id, Usuario usuario) {
+    public ResponseEntity<Usuario> update(Integer id, Usuario usuario) {
         LOGGER.info("ACTUALIZANDO USUARIO - METODO: UsuarioServiceImpl.update()");
 
         if(id > 0){
@@ -120,7 +125,7 @@ public class UsuarioServiceImpl {
                 if(usuario.getPassword() != null)
                     tempUser.get().setPassword( this.convertToSHA256(usuario.getPassword()) );
                 if(usuario.getRol() != null)
-                    tempUser.get().setRol(usuario.getRol());
+                    tempUser.get().setRol((usuario.getRol()));
                 try {
 
                     return new ResponseEntity<>(this.usuarioRepository.save(tempUser.get()), HttpStatus.CREATED);
@@ -142,7 +147,7 @@ public class UsuarioServiceImpl {
     }
 
 
-    public ResponseEntity<Boolean> delete(int id){
+    public ResponseEntity<Boolean> delete(Integer id){
         LOGGER.info("ELIMINANDO USUARIO - METODO: UsuarioServiceImpl.delete()");
         Boolean success = this.findUsuarioById(id).map(user -> {
                 this.usuarioRepository.delete(user);
@@ -209,35 +214,33 @@ public class UsuarioServiceImpl {
 
 
 
-    // metodo para insertar un usuario en la base de datos al desplegar la aplicacion con rol de administrador
-//    @Override
-//    public void insertarUsuarios() {
-//
-//        Usuario usuario = new Usuario();
-//        usuario.setUsername("admin");
-//        usuario.setPassword(bCryptPasswordEncoder.encode("12345"));
-//        usuario.setEmail("jony@hotmail.com");
-//        usuario.setEnabled(true);
-//
-//
-//        Rol rol = new Rol();
-//        rol.setIdRol(1L);
-//        rol.setNombre("ADMIN");
-//        rol.setDescripcion("Administrador de la aplicacion");
-//
-//        Set<UsuarioRol> usuarioRoles = new HashSet<>();
-//        UsuarioRol usuarioRol = new UsuarioRol();
-//        usuarioRol.setRol(rol);
-//        usuarioRol.setUsuario(usuario);
-//        usuarioRoles.add(usuarioRol);
-//
-//        try {
-//            this.saveUsuario(usuario, usuarioRoles);
-//        } catch (ResourceNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+     //metodo para insertar un usuario en la base de datos al desplegar la aplicacion con rol de administrador
 
+    public void insertarUsuarios() {
+        LOGGER.info("INSERTANDO USUARIOS - METODO: UsuarioServiceImpl.insertarUsuarios()");
+        Usuario usuario = new Usuario();
+        usuario.setNickname("admin");
+        usuario.setPassword(this.convertToSHA256("admin"));
+        usuario.setEmail("admin@localhost");
+        usuario.setActive(true);
+        // crear rol de administrador
+        Rol rol = new Rol();
+        rol.setName("ROLE_ADMIN");
+        rol.setDescription("Administrador");
+        this.usuarioRepository.save(usuario);
+        this.rolService.create(rol);
+
+        usuario = new Usuario();
+        usuario.setNickname("user");
+        usuario.setPassword(this.convertToSHA256("user"));
+        usuario.setEmail("user@localhost");
+        usuario.setActive(true);
+        // crear rol de usuario
+        rol = new Rol();
+        rol.setName("ROLE_USER");
+        rol.setDescription("Usuario");
+        this.usuarioRepository.save(usuario);
+        this.rolService.create(rol);
+    }
 }
 

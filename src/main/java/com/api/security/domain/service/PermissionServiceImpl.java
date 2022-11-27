@@ -33,7 +33,7 @@ public class PermissionServiceImpl  {
         return (List<Permission>)this.permissionRepository.findAll();
     }
 
-    public Optional<Permission> showId(int id){
+    public Optional<Permission> showId(Integer id){
         LOGGER.info("OBTENIENDO PERMISO POR ID - METODO: PermissionServiceImpl.showId()");
         Optional<Permission> result = this.permissionRepository.findById(id);
         if(result.isEmpty())
@@ -67,7 +67,7 @@ public class PermissionServiceImpl  {
                     "URL y método son obligatorios");
     }
 
-    public ResponseEntity<Permission> update(int id, Permission updatedPermission){
+    public ResponseEntity<Permission> update(Integer id, Permission updatedPermission){
         LOGGER.info("ACTUALIZANDO PERMISO - METODO: PermissionServiceImpl.update()");
         if(id > 0){
             Optional<Permission> tempPermission = this.showId(id);
@@ -98,7 +98,7 @@ public class PermissionServiceImpl  {
                     "Id inválido");
     }
 
-    public ResponseEntity<Boolean> delete(int id){
+    public ResponseEntity<Boolean> delete(Integer id){
         LOGGER.info("ELIMINANDO PERMISO - METODO: PermissionServiceImpl.delete()");
         Boolean success = this.showId(id).map(permission -> {
             this.permissionRepository.delete(permission);

@@ -22,5 +22,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query(value = "SELECT * FROM user WHERE email=? AND password=?;", nativeQuery = true)
     Optional<Usuario> validateLogin(String email, String password);
 
+
+
 }
 

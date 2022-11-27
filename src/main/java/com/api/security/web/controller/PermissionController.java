@@ -24,7 +24,7 @@ public class PermissionController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Permission> getPermissionById(@PathVariable("id") int id){
+    public Optional<Permission> getPermissionById(@PathVariable("id") Integer id){
         return this.permissionService.showId(id);
     }
 
@@ -34,12 +34,12 @@ public class PermissionController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Permission> updatePermission(@PathVariable("id") int id, @RequestBody Permission permission){
+    public ResponseEntity<Permission> updatePermission(@PathVariable("id") Integer id, @RequestBody Permission permission){
         return this.permissionService.update(id, permission);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deletePermission(@PathVariable("id") int id){
+    public ResponseEntity<Boolean> deletePermission(@PathVariable("id") Integer id){
         return this.permissionService.delete(id);
     }
 }

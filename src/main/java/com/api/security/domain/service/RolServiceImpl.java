@@ -42,7 +42,7 @@ public class RolServiceImpl {
     }
 
 
-    public Optional<Rol> showId(int id){
+    public Optional<Rol> showId(Integer id){
         LOGGER.info("OBTENIENDO ROL POR ID - METODO: RolServiceImpl.showId()");
         Optional<Rol> result = this.rolRepository.findById(id);
         if(result.isEmpty())
@@ -76,7 +76,7 @@ public class RolServiceImpl {
     }
 
 
-    public ResponseEntity<Rol> update(int id, Rol updatedRol){
+    public ResponseEntity<Rol> update(Integer id, Rol updatedRol){
         LOGGER.info("ACTUALIZANDO ROL - METODO: RolServiceImpl.update()");
         if(id > 0){
             Optional<Rol> tempRol = this.showId(id);
@@ -106,7 +106,7 @@ public class RolServiceImpl {
                     "Rol ID no es válido");
     }
 
-    public ResponseEntity<Rol> addPermission(int idRol, int idPermission) {
+    public ResponseEntity<Rol> addPermission(Integer idRol, Integer idPermission) {
         LOGGER.info("AGREGANDO PERMISO A ROL - METODO: RolServiceImpl.addPermission()");
         Optional<Rol> rol = this.rolRepository.findById(idRol);
 
@@ -134,7 +134,7 @@ public class RolServiceImpl {
                     "Rol no existe en la base de datos");
     }
 
-    public ResponseEntity<Rol> removePermission(int idRol, int idPermission) {
+    public ResponseEntity<Rol> removePermission(Integer idRol, Integer idPermission) {
         LOGGER.info("QUITANDO PERMISO A ROL - METODO: RolServiceImpl.removePermission()");
         Optional<Rol> rol = this.rolRepository.findById(idRol);
 
@@ -163,7 +163,7 @@ public class RolServiceImpl {
     }
 
 
-    public ResponseEntity<Boolean> delete(int id){
+    public ResponseEntity<Boolean> delete(Integer id){
         LOGGER.info("ELIMINANDO ROL - METODO: RolServiceImpl.delete()");
         Boolean success = this.showId(id).map(rol -> {
             this.rolRepository.delete(rol);
@@ -179,7 +179,7 @@ public class RolServiceImpl {
     }
 
 
-    public ResponseEntity<Boolean> validateGrant(int idRol, Permission permission){
+    public ResponseEntity<Boolean> validateGrant(Integer idRol, Permission permission){
         LOGGER.info("VALIDANDO PERMISO - METODO: RolServiceImpl.validateGrant()");
         boolean isGrant = false;
         Optional<Rol> tempRol = this.rolRepository.findById(idRol);

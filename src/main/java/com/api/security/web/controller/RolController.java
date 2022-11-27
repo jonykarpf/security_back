@@ -25,12 +25,12 @@ public class RolController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Rol> getRolById(@PathVariable("id") int id){
+    public Optional<Rol> getRolById(@PathVariable("id") Integer id){
         return this.rolService.showId(id);
     }
 
     @GetMapping("/validate/{idRol}")
-    public ResponseEntity<Boolean> getRolById(@PathVariable("idRol") int idRol, @RequestBody Permission permission){
+    public ResponseEntity<Boolean> getRolById(@PathVariable("idRol") Integer idRol, @RequestBody Permission permission){
         return this.rolService.validateGrant(idRol, permission);
     }
 
@@ -40,22 +40,22 @@ public class RolController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Rol> updateRol(@PathVariable("id") int id, @RequestBody Rol rol){
+    public ResponseEntity<Rol> updateRol(@PathVariable("id") Integer id, @RequestBody Rol rol){
         return this.rolService.update(id, rol);
     }
 
     @PutMapping("/update/{idRol}/add_permission/{idPermission}")
-    public ResponseEntity<Rol> updateRolAddPermission(@PathVariable("idRol") int idRol, @PathVariable("idPermission") int idPermission){
+    public ResponseEntity<Rol> updateRolAddPermission(@PathVariable("idRol") Integer idRol, @PathVariable("idPermission") int idPermission){
         return this.rolService.addPermission(idRol, idPermission);
     }
 
     @PutMapping("/update/{idRol}/remove_permission/{idPermission}")
-    public ResponseEntity<Rol> updateRolRemovePermission(@PathVariable("idRol") int idRol, @PathVariable("idPermission") int idPermission){
+    public ResponseEntity<Rol> updateRolRemovePermission(@PathVariable("idRol") Integer idRol, @PathVariable("idPermission") int idPermission){
         return this.rolService.removePermission(idRol, idPermission);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteRol(@PathVariable("id") int id){
+    public ResponseEntity<Boolean> deleteRol(@PathVariable("id") Integer id){
         return this.rolService.delete(id);
     }
 }

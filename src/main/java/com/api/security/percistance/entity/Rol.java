@@ -12,7 +12,7 @@ public class Rol {
     // attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRol;
+    private Integer idRol;
     @Column(name="name", nullable = false, unique = true)
     private String name;
     private String description = "";
@@ -33,7 +33,7 @@ public class Rol {
     // constructors
 
 
-    public Rol(Long idRol, String name, String description, List<Usuario> users, Set<Permission> permissions) {
+    public Rol(Integer idRol, String name, String description, List<Usuario> users, Set<Permission> permissions) {
         this.idRol = idRol;
         this.name = name;
         this.description = description;
@@ -45,11 +45,11 @@ public class Rol {
 
     }
 
-    public Long getIdRol() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(Long idRol) {
+    public void setIdRol(Integer idRol) {
         this.idRol = idRol;
     }
 

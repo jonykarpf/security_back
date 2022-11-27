@@ -25,7 +25,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/by_id/{id}")
-    public Optional<Usuario> getUserById(@PathVariable("id") int id){
+    public Optional<Usuario> getUserById(@PathVariable("id") Integer id){
         return this.usuarioService.findUsuarioById( id);
     }
 
@@ -50,12 +50,12 @@ public class UsuarioController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Usuario> updateUser(@PathVariable("id") int id, @RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> updateUser(@PathVariable("id") Integer id, @RequestBody Usuario usuario){
         return this.usuarioService.update(Math.toIntExact(id), usuario);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable("id") int id){
+    public ResponseEntity<Boolean> deleteUser(@PathVariable("id") Integer id){
         return this.usuarioService.delete(Math.toIntExact(id));
     }
 }
