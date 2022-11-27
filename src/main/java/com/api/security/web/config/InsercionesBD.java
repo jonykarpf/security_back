@@ -1,6 +1,7 @@
 package com.api.security.web.config;
 
 import com.api.security.domain.service.impl.PermissionServiceImpl;
+import com.api.security.domain.service.impl.RolServiceImpl;
 import com.api.security.domain.service.impl.UsuarioServiceImpl;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class InsercionesBD {
     private PermissionServiceImpl permissionService;
 
 
+    // inyeccion de dependencia role service impl
+    @Autowired
+    private RolServiceImpl roleService;
+
+
 
     // anotacion que llama al metodo al iniciar la aplication para insertar datos en la base de datos
     @PostConstruct
@@ -34,6 +40,9 @@ public class InsercionesBD {
 
         // insertar permisos en la base de datos
         permissionService.insertarPermisos();
+
+        // insertar roles en la base de datos
+        roleService.insertRoles();
 
 
 
